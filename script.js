@@ -1,7 +1,7 @@
 const canvas = document.getElementById('canvas1');
 const stat = document.getElementById('statup');
-let limit = 80;
-let numNodes=100;
+let limit = 200;
+let numNodes=30;
 let status = true;
 const ctx = canvas.getContext("2d");
 const framerate=60;
@@ -58,9 +58,8 @@ class node{
             nodes.forEach((node)=>{
                 let dis=Math.sqrt(Math.pow((this.x-node.x),2)+Math.pow((this.y-node.y),2));
             if(dis<limit && dis>0){
-                this.connect(node,[200,200,0,0.5]);
+                this.connect(node,[255,255,255,1-(dis/limit)]);
             }
-            
         });
         }
         this.update();
