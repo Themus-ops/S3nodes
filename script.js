@@ -1,13 +1,15 @@
 const canvas = document.getElementById('canvas1');
 const stat = document.getElementById('statup');
-let limit = 200;
-let numNodes=30;
+let lineCol =[255,0,0];
+let limit = 100;
+let tick = 0;
+let numNodes=300;
 let status = true;
 const ctx = canvas.getContext("2d");
 const framerate=60;
-
+let gconst = 100;
 function statupdate(){
-    stat.innerHTML = `Min-length : ${limit} <br><br> No. nodes : ${numNodes}`
+    stat.innerHTML = `Force : ${limit} <br><br> No. nodes : ${numNodes} <br><br> color : ${lineCol[0]}, ${lineCol[1]}, ${lineCol[2]}`;
 }
 
 function resize() {
@@ -34,7 +36,7 @@ class node{
         ctx.moveTo(this.x,this.y);
         ctx.lineTo(node.x,node.y);
         ctx.strokeStyle= `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
-        ctx.linwidth = 2;
+        ctx.linwidth = 5;
         ctx.stroke();
     }
 
@@ -58,18 +60,32 @@ class node{
             nodes.forEach((node)=>{
                 let dis=Math.sqrt(Math.pow((this.x-node.x),2)+Math.pow((this.y-node.y),2));
             if(dis<limit && dis>0){
-                this.connect(node,[255,255,255,1-(dis/limit)]);
+                this.connect(node,[lineCol[0],lineCol[1],lineCol[2],1.2-(dis/limit)]);
+                node.x+=(this.x-node.x)/(Math.pow(this.radius,2)*dis);
+                node.y+=(this.y-node.y)/(Math.pow(this.radius,2)*dis);
+                // this.x-=(this.x-node.x)/(Math.pow(this.radius,2)*dis*gconst);
+                // this.y-=(this.y-node.y)/(Math.pow(this.radius,2)*dis*gconst);
+                
             }
+            if (this.x > canvas.width+10 || this.x < -10) { this.x = getRandom(20, canvas.width - 10); }
+                if (node.x > canvas.width+10 || node.x < -10) { node.x = getRandom(20, canvas.width - 10); }
+
+                // Validate and fix Y coordinates
+                if (this.y > canvas.height+10 || this.y < -10) { this.y = getRandom(20, canvas.height - 10); }
+                if (node.y > canvas.height+10 || node.y < -10) { node.y = getRandom(20, canvas.height - 10); }
+                // console.log(canvas.width,canvas.height);
         });
         }
         this.update();
+
     }
 
 }
 
-// let node1 = new node(100,100,4,[0,255,0],0.1,0.1,4);
+// let node1 = new node(canvas.width/2,canvas.height/2,4,[0,255,0],0,0,7);
 
 let nodes = [];
+// nodes.push(node1);
 
 
 for(let i=0;i<numNodes;i++){
@@ -80,7 +96,7 @@ function createNodes(){
     let temp = new node(
         getRandom(20,canvas.width-10),
         getRandom(20,canvas.height-10),
-        getRandom(1,3),
+        2,
         [0,255,0],
         getRandom(-3,3),
         getRandom(-3,3),
@@ -90,7 +106,7 @@ function createNodes(){
 
 }
 
-function getRandom(min,max){
+function getRandom(min=0,max){
     return Number((Math.random()*(max-min)+min).toFixed(2));
 }
 
@@ -104,9 +120,15 @@ function animate(){
 
 setInterval(()=>{
         if(status){animate();}
+        // if(tick%10==1){limit++;}
+        // if(tick%1500==1){limit=0}
+        // console.log(tick,limit);
+        // statupdate()
+        // tick++;
         
     },1000/framerate);
 window.addEventListener('resize', resize);
+let k =0;
 window.addEventListener('keydown',(e)=>{
     if(numNodes>10 && e.key=='ArrowDown'){
         numNodes-=10;
@@ -122,7 +144,7 @@ window.addEventListener('keydown',(e)=>{
         }        
     }
 
-    if(e.key=="ArrowLeft" && limit>10){
+    if(e.key=="ArrowLeft" && limit>0){
         limit-=10;   
     }
 
@@ -133,5 +155,21 @@ window.addEventListener('keydown',(e)=>{
     if(e.key==" "){
         status=!status;
     }
+    if(e.key=="w"){
+        lineCol=[getRandom(0,255),getRandom(0,255),getRandom(0,255)]   
+    }
+    if(e.key=="p"){
+        
+        k=!k;
+        limit=(2000**k)+(0**(1-k))-1;
+    }
+    if(e.key=="["){
+        if(gconst-50>0)
+        gconst-=50;
+    }
+    if(e.key=="]"){
+        gconst+=50;
+    }
+    
     statupdate();
 })
