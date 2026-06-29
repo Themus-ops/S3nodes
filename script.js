@@ -1,9 +1,10 @@
 const canvas = document.getElementById('canvas1');
 const stat = document.getElementById('statup');
+const nnslider = document.getElementById('NNslider');
 let lineCol =[255,0,0];
 let limit = 100;
 let tick = 0;
-let numNodes=300;
+let numNodes=(window.innerWidth/3).toFixed(0);
 let status = true;
 const ctx = canvas.getContext("2d");
 const framerate=60;
@@ -127,6 +128,28 @@ setInterval(()=>{
         // tick++;
         
     },1000/framerate);
+
+function sliders(){
+    
+    let curno =  parseInt(nnslider.value, 10);
+    console.log(curno);
+    if(curno>numNodes){
+        for(let i=0;i<curno-numNodes;i++){
+            createNodes();
+            
+            statupdate();
+        }
+
+    }
+    if(curno<numNodes){
+        for(let i=0;i<numNodes-curno;i++){
+            nodes.pop();
+            statupdate();
+        }
+
+    }
+    numNodes=curno;
+}
 window.addEventListener('resize', resize);
 let k =0;
 window.addEventListener('keydown',(e)=>{
@@ -143,6 +166,7 @@ window.addEventListener('keydown',(e)=>{
             createNodes();
         }        
     }
+
 
     if(e.key=="ArrowLeft" && limit>0){
         limit-=10;   

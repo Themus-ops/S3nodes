@@ -50,4 +50,12 @@ canvas{
     z-index: 1;
     /* display:none; */
 }
+
+#NNslider{
+    position:absolute;
+    width:70%;
+    bottom:30px;
+    background: red;
+
+}
 /* *{border:1px solid red;} */
