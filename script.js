@@ -58,7 +58,9 @@ class node{
             nodes.forEach((node)=>{
                 let dis=Math.sqrt(Math.pow((this.x-node.x),2)+Math.pow((this.y-node.y),2));
             if(dis<limit && dis>0){
-                this.connect(node,[255,255,255,1-(dis/limit)]);
+                // this.connect(node,[255,255,255,1.2-(dis/limit)]);
+                node.x+=(this.x-node.x)/100*this.radius;
+                node.y+=(this.y-node.y)/100*this.radius;
             }
         });
         }
@@ -67,9 +69,10 @@ class node{
 
 }
 
-// let node1 = new node(100,100,4,[0,255,0],0.1,0.1,4);
+// let node1 = new node(canvas.width/2,canvas.height/2,4,[0,255,0],0,0,7);
 
 let nodes = [];
+// nodes.push(node1);
 
 
 for(let i=0;i<numNodes;i++){
@@ -80,8 +83,8 @@ function createNodes(){
     let temp = new node(
         getRandom(20,canvas.width-10),
         getRandom(20,canvas.height-10),
-        getRandom(1,3),
-        [0,255,0],
+        getRandom(1,7),
+        [getRandom(0,255),getRandom(0,255),getRandom(0,255)],
         getRandom(-3,3),
         getRandom(-3,3),
         3);
@@ -90,7 +93,7 @@ function createNodes(){
 
 }
 
-function getRandom(min,max){
+function getRandom(min=0,max){
     return Number((Math.random()*(max-min)+min).toFixed(2));
 }
 
@@ -122,7 +125,7 @@ window.addEventListener('keydown',(e)=>{
         }        
     }
 
-    if(e.key=="ArrowLeft" && limit>10){
+    if(e.key=="ArrowLeft" && limit>0){
         limit-=10;   
     }
 

@@ -6,6 +6,7 @@
 
 body{
     overflow: hidden;
+    /* background-image: url('img/sky.avif'); */
 }
 canvas{
     display: block;
@@ -14,9 +15,28 @@ canvas{
 }
 
 #statup{
+    border-radius: 20px;
     position:absolute;
     color: white;
     margin:20px 0 0 50px;
-    font-size: 20px;
+    font-size: 15px;
+    border: 1px solid white;
+    padding: 10px;
     font-family:sans-serif;
+}
+
+#statup:hover{
+    transform: scale(1.2);
+    transition:opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+}
+
+#hero{
+    position: absolute;
+    width :50%;
+    height: 50%;
+    margin-left: 25%;
+    margin-top: 25%;
+    background-color: rgba(255, 255, 255, 0.484);
+    border-radius: 30px;
+    display:none;
 }
