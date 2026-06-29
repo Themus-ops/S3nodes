@@ -1,0 +1,30 @@
+name: Deploy Branch Preview
+
+on:
+  push:
+    branches:
+      - gravity # Change this to your specific secondary branch name
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # OPTIONAL STEP: If your site needs a build step (like React, Vue, or Vite)
+      # Un-comment the next lines and add your build commands:
+      # - name: Install and Build
+      #   run: |
+      #     npm install
+      #     npm run build
+
+      - name: Deploy to Subfolder
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages # Deploys to your tracking branch
+          folder: . # The folder containing your static HTML (use 'dist' or 'build' if using a framework)
+          target-folder: gravity # The subfolder name where this branch will live online
