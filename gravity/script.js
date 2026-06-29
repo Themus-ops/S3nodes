@@ -1,7 +1,7 @@
 const canvas = document.getElementById('canvas1');
 const stat = document.getElementById('statup');
-let limit = 200;
-let numNodes=30;
+let limit = 40;
+let numNodes=130;
 let status = true;
 const ctx = canvas.getContext("2d");
 const framerate=60;
@@ -34,7 +34,7 @@ class node{
         ctx.moveTo(this.x,this.y);
         ctx.lineTo(node.x,node.y);
         ctx.strokeStyle= `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
-        ctx.linwidth = 2;
+        ctx.linwidth = 5;
         ctx.stroke();
     }
 
@@ -58,13 +58,14 @@ class node{
             nodes.forEach((node)=>{
                 let dis=Math.sqrt(Math.pow((this.x-node.x),2)+Math.pow((this.y-node.y),2));
             if(dis<limit && dis>0){
-                // this.connect(node,[255,255,255,1.2-(dis/limit)]);
+                this.connect(node,[255,255,255,1.2-(dis/limit)]);
                 node.x+=(this.x-node.x)/100*this.radius;
                 node.y+=(this.y-node.y)/100*this.radius;
             }
         });
         }
         this.update();
+
     }
 
 }
