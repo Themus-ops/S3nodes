@@ -1,25 +1,18 @@
 const canvas = document.getElementById('canvas1');
 const stat = document.getElementById('statup');
 const nnslider = document.getElementById('NNslider');
+const fslider = document.getElementById('Fslider');
+const ctx = canvas.getContext("2d");
+
 let lineCol =[255,0,0];
 let limit = 100;
 let tick = 0;
 let numNodes=(window.innerWidth/3).toFixed(0);
 let status = true;
-const ctx = canvas.getContext("2d");
 const framerate=60;
 let gconst = 100;
-function statupdate(){
-    stat.innerHTML = `Force : ${limit} <br><br> No. nodes : ${numNodes} <br><br> color : ${lineCol[0]}, ${lineCol[1]}, ${lineCol[2]}`;
-}
-
-function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-}
-statupdate()
-resize();
+let nodes = [];
+let k =0;
 
 class node{
     constructor(x,y,radius,color,speedx,speedy,fadesize=2){
@@ -83,15 +76,26 @@ class node{
 
 }
 
-// let node1 = new node(canvas.width/2,canvas.height/2,4,[0,255,0],0,0,7);
+function close1(element,caller,message){
+    if(element.style.display!="none"){
+        element.style.display="none";
+        caller.innerHTML = `<p>${message}</p>`;
+    }else{
+        element.style.display="block";
+        caller.innerHTML = "<p>Close</p>";
+    }
+    
+}
 
-let nodes = [];
-// nodes.push(node1);
+function statupdate(){
+    stat.innerHTML = `Force : ${limit} <br><br> No. nodes : ${nodes.length} <br><br> color : ${lineCol[0]}, ${lineCol[1]}, ${lineCol[2]}`;
+}
 
-
-for(let i=0;i<numNodes;i++){
-    createNodes();
-} 
+function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+}
 
 function createNodes(){
     let temp = new node(
@@ -118,9 +122,45 @@ function animate(){
     }
 }
 
+function sliders(){
+    let curno =  parseInt(nnslider.value, 10);
+    if(curno>nodes.length){
+        for(let i=0;i<curno-nodes.length;i++){
+            createNodes();
+        }
+    }
+    if(curno<nodes.length){
+        for(let i=0;i<nodes.length-curno;i++){
+            nodes.pop();
+        }
+
+    }
+}
+
+function fsliding(){
+    let curno =  parseInt(fslider.value, 10);
+    limit = curno;
+}
+
+// let node1 = new node(canvas.width/2,canvas.height/2,4,[0,255,0],0,0,7);
+// nodes.push(node1);
+resize();
+
+for(let i=0;i<numNodes;i++){
+    createNodes();
+} 
+fslider.value = limit;
+nnslider.value = nodes.length;
+statupdate()
+
 
 setInterval(()=>{
-        if(status){animate();}
+        if(status){
+            sliders();
+            fsliding();
+            animate();
+            statupdate();
+        }
         // if(tick%10==1){limit++;}
         // if(tick%1500==1){limit=0}
         // console.log(tick,limit);
@@ -129,44 +169,21 @@ setInterval(()=>{
         
     },1000/framerate);
 
-function sliders(){
-    
-    let curno =  parseInt(nnslider.value, 10);
-    console.log(curno);
-    if(curno>numNodes){
-        for(let i=0;i<curno-numNodes;i++){
-            createNodes();
-            
-            statupdate();
-        }
 
-    }
-    if(curno<numNodes){
-        for(let i=0;i<numNodes-curno;i++){
-            nodes.pop();
-            statupdate();
-        }
-
-    }
-    numNodes=curno;
-}
 window.addEventListener('resize', resize);
-let k =0;
+
 window.addEventListener('keydown',(e)=>{
-    if(numNodes>10 && e.key=='ArrowDown'){
-        numNodes-=10;
+    if(nodes.length>10 && e.key=='ArrowDown'){
         for(let i=0;i<10;i++){
             nodes.pop();
-        }
-        
+        } 
     }
+
     if(e.key=="ArrowUp"){
-        numNodes+=10;
         for(let i=0;i<10;i++){
             createNodes();
         }        
     }
-
 
     if(e.key=="ArrowLeft" && limit>0){
         limit-=10;   
@@ -179,21 +196,24 @@ window.addEventListener('keydown',(e)=>{
     if(e.key==" "){
         status=!status;
     }
+
     if(e.key=="w"){
         lineCol=[getRandom(0,255),getRandom(0,255),getRandom(0,255)]   
     }
+
     if(e.key=="p"){
-        
         k=!k;
         limit=(2000**k)+(0**(1-k))-1;
     }
+
     if(e.key=="["){
         if(gconst-50>0)
         gconst-=50;
     }
+
     if(e.key=="]"){
         gconst+=50;
     }
-    
-    statupdate();
+    fslider.value = limit;
+    nnslider.value= nodes.length;
 })
