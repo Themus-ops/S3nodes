@@ -7,12 +7,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="close" onclick="close1(document.getElementById('controls'),this,'Controls')" style="z-index:1;position:fixed;right:50px;top:20px;border:1px solid white;border-radius: 20px;padding: 10px;background-color: rgba(104, 104, 104, 0.304);"><p>Controls</p></div>
     <div id="container"><div id="hero"></div>
-    <input type="range" min="2" max="400" value="100" step="1" id="NNslider" oninput="sliders()">
+    <div id="controls" style="display:none;">
+        <p>No. Nodes: </p>
+        <input type="range" min="2" max="400" value="100" step="1" class="slider" id="NNslider"><br>
+        <p>Force: </p>
+        <input type="range" min="0" max="300" value="0" step="1" class="slider" id="Fslider">    
+    </div>
 </div>
     
-    <div id="statup">dfadsa</div>
+    <div id="stacont">
+        <div class="close" onclick="close1(stat,this,'Statistic')"><p>Statistic</p></div>
+        <div id="statup" style="display:none;"></div>
+        
+    </div>
     <canvas id="canvas1"></canvas>
-    <script src="script.js"></script>  
+    <script src="script.js"></script>
 </body>
 </html>
